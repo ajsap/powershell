@@ -89,11 +89,11 @@ $age = $age -replace "h", ""
 $files = Get-ChildItem $location -Filter $object.'file.match' | Where{$_.LastWriteTime -gt (Get-Date).AddHours(-$age)}
 } 
 
-"Files after the filters are applied "+$files
+#"Files after the filters are applied "+$files
 
 # ITERATE OVER ALL THE FILES FOUND AFTER FILTERS ARE APPLIED:
 foreach ($file in $files){
-"Processing file "+$file
+#"Processing file "+$file
 if($file){
 Try{
 
