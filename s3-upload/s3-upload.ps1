@@ -71,6 +71,7 @@ $secretkey = $object.Get_Item('aws.secretkey')
 $region = $object.Get_Item('aws.region')
 $awsfolder = $object.Get_Item('aws.folder')
 $isdelete = $object.Get_Item('file.delete')
+$iszip = $object.Get_Item('file.zip')
 
 # FIND FILES USING THE GIVEN FILTER:
 if($age.contains('M')){
@@ -97,9 +98,32 @@ $name = $file.Name
 
 # UPLOAD FILE TO AWS S3:
 $fullname
+
+if($iszip){
+
+$zipfilename = $name+".zip"
+$zipfile = $fullname+".zip"
+# INITIALIZE THE ZIP FILE:
+if(-not (test-path($zipFile))) {
+    set-content $zipFile ("PK" + [char]5 + [char]6 + ("$([char]0)" * 18))
+    (dir $zipFile).IsReadOnly = $false  
+}
+
+# CREATE ZIP PACKAGE:
+$shellApplication = new-object -com shell.application
+$zipPackage = $shellApplication.NameSpace($zipFile)
+$zipPackage.CopyHere($fullname)
+# THIS 'WHILE' LOOP CHECKS EACH FILE IS ADDED BEFORE CONTINUING:
+while($zipPackage.Items().Item($name) -eq $null){
+   Start-Sleep -milliseconds 500
+}
+Write-S3Object -BucketName $bucket -Key $awsfolder$zipfilename -File $zipfile -AccessKey $accesskey -SecretKey $secretkey -Region $region
+
+}else{
 # IF EXCEPTION ON THE BELOW LINE:
 Write-S3Object -BucketName $bucket -Key $awsfolder$name -File $fullname -AccessKey $accesskey -SecretKey $secretkey -Region $region
 # CODE STOPS ON THE ABOVE LINE, IF EXCEPTION OCCURS, CODE EXITS ON THE ABOVE LINE, SO THE FILE WILL NOT BE DELETED.
+}
 if($isdelete){
 	Remove-Item $fullname -Recurse
 }
@@ -110,7 +134,8 @@ Catch{
 # FINDS THE ERROR:
  $line = $_.InvocationInfo.ScriptLineNumber
  $ErrorMessage = $_.Exception.Message
-
+ $ErrorMessage
+ $line
  if($ErrorMessage.Contains("Cannot bind argument to parameter")){
  ''
  }else{
@@ -125,6 +150,12 @@ Catch{
  }
  }
 
+}
+# REMOVE THE TEMPORARY ZIP FILE THAT IS CREATED:
+if($iszip){
+if(Test-Path $zipfile){
+Remove-Item $zipfile -Recurse
+}
 }
 }
 }
