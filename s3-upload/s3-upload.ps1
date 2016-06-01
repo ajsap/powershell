@@ -89,11 +89,11 @@ $age = $age -replace "h", ""
 $files = Get-ChildItem $location -Filter $object.'file.match' | Where{$_.LastWriteTime -gt (Get-Date).AddHours(-$age)}
 } 
 
-#"Files after the filters are applied "+$files
+#"Files after the filters are applied "+$files  [DEBUG]
 
 # ITERATE OVER ALL THE FILES FOUND AFTER FILTERS ARE APPLIED:
 foreach ($file in $files){
-#"Processing file "+$file
+#"Processing file "+$file  [DEBUG]
 if($file){
 Try{
 
@@ -121,11 +121,11 @@ $zipPackage.CopyHere($fullname)
 while($zipPackage.Items().Item($name) -eq $null){
    Start-Sleep -milliseconds 500
 }
-"Uploading zip file to S3: "+$zipfile
+#"Uploading zip file to S3: "+$zipfile  [DEBUG]
 Write-S3Object -BucketName $bucket -Key $awsfolder$zipfilename -File $zipfile -AccessKey $accesskey -SecretKey $secretkey -Region $region
 
 }else{
-"Uploading zip file to S3: "+$fullname
+#"Uploading file to S3: "+$fullname  [DEBUG]
 # IF EXCEPTION ON THE BELOW LINE:
 Write-S3Object -BucketName $bucket -Key $awsfolder$name -File $fullname -AccessKey $accesskey -SecretKey $secretkey -Region $region
 # CODE STOPS ON THE ABOVE LINE, IF EXCEPTION OCCURS, CODE EXITS ON THE ABOVE LINE, SO THE FILE WILL NOT BE DELETED.
