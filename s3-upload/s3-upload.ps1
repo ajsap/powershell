@@ -159,9 +159,11 @@ Catch{
 }
 }
 # REMOVE THE TEMPORARY ZIP FILE THAT IS CREATED:
+if($file){
 if($iszip){
 if(Test-Path $zipfile){
 Remove-Item $zipfile -Recurse
+}
 }
 }
 }
