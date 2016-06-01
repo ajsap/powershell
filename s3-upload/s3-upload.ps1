@@ -117,9 +117,11 @@ $zipPackage.CopyHere($fullname)
 while($zipPackage.Items().Item($name) -eq $null){
    Start-Sleep -milliseconds 500
 }
+"Uploading zip file to S3: "+$zipfile
 Write-S3Object -BucketName $bucket -Key $awsfolder$zipfilename -File $zipfile -AccessKey $accesskey -SecretKey $secretkey -Region $region
 
 }else{
+"Uploading zip file to S3: "+$fullname
 # IF EXCEPTION ON THE BELOW LINE:
 Write-S3Object -BucketName $bucket -Key $awsfolder$name -File $fullname -AccessKey $accesskey -SecretKey $secretkey -Region $region
 # CODE STOPS ON THE ABOVE LINE, IF EXCEPTION OCCURS, CODE EXITS ON THE ABOVE LINE, SO THE FILE WILL NOT BE DELETED.
