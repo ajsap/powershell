@@ -94,6 +94,7 @@ $files = Get-ChildItem $location -Filter $object.'file.match' | Where{$_.LastWri
 # ITERATE OVER ALL THE FILES FOUND AFTER FILTERS ARE APPLIED:
 foreach ($file in $files){
 "Processing file "+$file
+if($file){
 Try{
 
 $fullname = $file.FullName
@@ -155,6 +156,7 @@ Catch{
  }
  }
 
+}
 }
 # REMOVE THE TEMPORARY ZIP FILE THAT IS CREATED:
 if($iszip){
