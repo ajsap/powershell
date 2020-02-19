@@ -1,4 +1,4 @@
-<# TouchDrives v1.0 by Andy Saputra
+<# Touch Drives v1.0 by Andy Saputra
 andy@saputra.org / https://saputra.org
 
 This PowerShell script will create a file
