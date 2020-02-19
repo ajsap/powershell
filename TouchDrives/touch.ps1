@@ -1,9 +1,13 @@
 <# TouchDrives v1.0 by Andy Saputra
 andy@saputra.org / https://saputra.org
+
 This PowerShell script will create a file
 and modify that file with a time stamp to
 keep alive the drives, so they will not sleep
-even when idling #>
+even when idling.
+
+Define the drives you want to keep alive
+and the file name on the included touch.conf #>
 
 $configfile="C:/Scripts/touch.conf"
 function ConvertFrom-Json20([object] $item){ 
